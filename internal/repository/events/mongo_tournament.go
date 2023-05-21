@@ -2,6 +2,7 @@ package events
 
 import (
 	"context"
+	"log"
 
 	"github.com/ibra-bybuy/go-wsports-events/pkg/model"
 	"github.com/ibra-bybuy/go-wsports-events/pkg/utils"
@@ -24,6 +25,7 @@ func (m *MongoRepository) GetByTournament(ctx context.Context, tournament string
 	countOpts := options.Count().SetHint("_id_")
 	totalItems, err := collection.CountDocuments(context.TODO(), findFilter, countOpts)
 	if err != nil {
+		log.Println(err)
 		return &response
 	}
 	response.Pagination = *utils.BuildPagination(totalItems, page, limit)
@@ -37,6 +39,7 @@ func (m *MongoRepository) GetByTournament(ctx context.Context, tournament string
 	cursor, err := collection.Find(ctx, findFilter, opts)
 
 	if err != nil {
+		log.Println(err)
 		return &response
 	}
 

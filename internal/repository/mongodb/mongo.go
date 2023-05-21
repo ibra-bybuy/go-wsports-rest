@@ -22,6 +22,7 @@ func New() *Client {
 	port := dotenv.Get("MONGO_PORT")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	url := fmt.Sprintf("mongodb://%s:%s@%s:%s", username, pwd, host, port)
+
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
 

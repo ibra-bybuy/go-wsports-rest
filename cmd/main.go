@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/ibra-bybuy/go-wsports-events/internal/controller/banners"
@@ -42,7 +44,10 @@ func main() {
 	http.Handle("/api/v2/tournaments", http.HandlerFunc(tournamentsHandler.Handle))
 	http.Handle("/api/v2/banners", http.HandlerFunc(bannersHandler.Handle))
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	port := dotenv.Get("PORT")
+	log.Println(fmt.Sprintf("Listening to port %s", port))
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", port), nil); err != nil {
 		panic("Error listening to server")
 	}
+
 }

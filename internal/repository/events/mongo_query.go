@@ -2,6 +2,7 @@ package events
 
 import (
 	"context"
+	"log"
 
 	"github.com/ibra-bybuy/go-wsports-events/pkg/model"
 	"github.com/ibra-bybuy/go-wsports-events/pkg/utils"
@@ -22,7 +23,8 @@ func (m *MongoRepository) GetByQuery(ctx context.Context, query string, limit, p
 	model := mongo.IndexModel{Keys: bson.D{{Key: "name", Value: "text"}}}
 	_, err := collection.Indexes().CreateOne(context.TODO(), model)
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return &response
 	}
 
 	findFilter := bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: "ufc"}}}, {Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate("")}}}}
@@ -42,6 +44,7 @@ func (m *MongoRepository) GetByQuery(ctx context.Context, query string, limit, p
 	cursor, err := collection.Find(ctx, findFilter, opts)
 
 	if err != nil {
+		log.Println(err)
 		return &response
 	}
 
