@@ -11,6 +11,7 @@ type repository interface {
 	GetByQuery(ctx context.Context, query string, limit, page int) *model.PaginationResponse
 	GetByTournament(ctx context.Context, tournament string, limit, page int) *model.PaginationResponse
 	GetByID(ctx context.Context, id string) (*model.Event, error)
+	GetByUuid(ctx context.Context, uuid string) (*model.Event, error)
 }
 
 type Controller struct {
@@ -35,4 +36,8 @@ func (c *Controller) GetByTournament(ctx context.Context, tournament string, lim
 
 func (c *Controller) GetByID(ctx context.Context, id string) (*model.Event, error) {
 	return c.r.GetByID(ctx, id)
+}
+
+func (c *Controller) GetByUuid(ctx context.Context, uuid string) (*model.Event, error) {
+	return c.r.GetByUuid(ctx, uuid)
 }

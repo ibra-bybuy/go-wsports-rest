@@ -38,6 +38,13 @@ func (h *Handler) get(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	uuid := req.URL.Query().Get("uuid")
+
+	if uuid != "" {
+		h.getByUuid(w, req, uuid)
+		return
+	}
+
 	limit, err := strconv.Atoi(req.URL.Query().Get("limit"))
 
 	if err != nil || limit == 0 {
@@ -109,6 +116,21 @@ func (h *Handler) getByTournament(w http.ResponseWriter, req *http.Request, tour
 
 func (h *Handler) getByID(w http.ResponseWriter, req *http.Request, id string) {
 	response, err := h.ctrl.GetByID(req.Context(), id)
+	if err != nil {
+		utils.JSONError(w, model.ErrorResponse{
+			Message: err.Error(),
+		}, http.StatusNotFound)
+		return
+	}
+
+	json.NewEncoder(w).Encode(model.SuccessResponse{
+		Success: true,
+		Data:    response,
+	})
+}
+
+func (h *Handler) getByUuid(w http.ResponseWriter, req *http.Request, uuid string) {
+	response, err := h.ctrl.GetByUuid(req.Context(), uuid)
 	if err != nil {
 		utils.JSONError(w, model.ErrorResponse{
 			Message: err.Error(),
