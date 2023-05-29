@@ -15,8 +15,10 @@ func (m *MongoRepository) Get(ctx context.Context) *[]model.Tournament {
 	collection, ctx, cancel := m.getCollection()
 	defer cancel()
 
+	endDateStr := utils.EndDate()
+
 	// FIND
-	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate("")}}}}
+	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gte", Value: endDateStr}}}}
 	values, err := collection.Distinct(ctx, "name", findFilter)
 
 	if err != nil {

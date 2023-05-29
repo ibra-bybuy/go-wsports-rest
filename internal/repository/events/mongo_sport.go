@@ -18,10 +18,13 @@ func (m *MongoRepository) GetBySport(ctx context.Context, sport string, limit, p
 
 	collection, ctx, cancel := m.getCollection()
 	defer cancel()
-	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate(sport)}}}}
+
+	endDateStr := utils.EndDate()
+
+	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gte", Value: endDateStr}}}}
 
 	if sport != "" {
-		findFilter = bson.D{{Key: "sport", Value: sport}, {Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate(sport)}}}}
+		findFilter = bson.D{{Key: "sport", Value: sport}, {Key: "startAt", Value: bson.D{{Key: "$gte", Value: endDateStr}}}}
 	}
 
 	// COUNT

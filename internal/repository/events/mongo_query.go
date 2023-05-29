@@ -27,7 +27,10 @@ func (m *MongoRepository) GetByQuery(ctx context.Context, query string, limit, p
 		return &response
 	}
 
-	findFilter := bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: "ufc"}}}, {Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate("")}}}}
+	endDateStr := utils.EndDate()
+
+	findFilter := bson.D{{Key: "$text", Value: bson.D{{Key: "$search", Value: query}}}, {Key: "startAt", Value: bson.D{{Key: "$gte", Value: endDateStr}}}}
+
 	// COUNT
 	totalItems, err := collection.CountDocuments(context.TODO(), findFilter)
 	if err != nil {

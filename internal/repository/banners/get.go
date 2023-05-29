@@ -16,11 +16,13 @@ func (m *MongoRepository) Get(ctx context.Context) *model.BannerList {
 	collection, ctx, cancel := m.getCollection()
 	defer cancel()
 
+	endDateStr := utils.EndDate()
+
 	/*
 	* Retrieving unique avatar
 	* That are mma and not equal to ""
 	 */
-	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gt", Value: utils.StartDate("")}}}, {Key: "sport", Value: constants.MMA_TYPE}, {Key: "avatarUrl", Value: bson.D{{Key: "$ne", Value: ""}}}}
+	findFilter := bson.D{{Key: "startAt", Value: bson.D{{Key: "$gte", Value: endDateStr}}}, {Key: "sport", Value: constants.MMA_TYPE}, {Key: "avatarUrl", Value: bson.D{{Key: "$ne", Value: ""}}}}
 	values, err := collection.Distinct(ctx, "avatarUrl", findFilter)
 
 	if err != nil {
